@@ -57,6 +57,21 @@ describe('DataType', function () {
     });
   });
 
+  // 내가 만든 테스트 검사 코드
+  describe('정수형 값 검사 이벤트', function () {
+    it('updateValue 호출 시 ValueChanged 이벤트가 발생하여야 합니다.', async function () {
+      const oldValue = await contract.positiveNumber();
+      const newValue = 200;
+
+      await expect(contract.setPositiveNumber(newValue))
+        .to.emit(contract, 'ValueChanged')
+        .withArgs(oldValue, newValue);
+
+      // 이벤트 로그 출력
+      console.log(`ValueChanged 이벤트 발생: oldValue = ${oldValue}, newValue = ${newValue}`);
+    });
+  });
+
   describe('Boolean 값 검사', function () {
     it('초기값으로 isActive가 true여야 합니다.', async function () {
       expect(await contract.isActive()).to.equal(true);
