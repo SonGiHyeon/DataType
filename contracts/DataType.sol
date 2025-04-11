@@ -17,27 +17,40 @@ contract DataType {
         Inactive
     }
     State public currentState;
+    mapping(address => uint) balances;
 
     // 초기값 설정
     constructor(address payable _recipient) {
         recipient = _recipient;
         currentState = State.Active;
     }
+
     // 테스트 통과를 위한 이벤트 코드
-    event ValueChanged(uint256 oldValue, uint256 newValue);
+    event ValueChanged_uint(uint256 oldValue, uint256 newValue);
+    event ValueChanged_int(int256 oldValue, int256 newValue);
+
     // 숫자 변환 함수
     function setPositiveNumber(uint _positiveNumber) public returns (uint) {
         uint oldValue = positiveNumber;
         positiveNumber = _positiveNumber;
 
-        emit ValueChanged(oldValue, _positiveNumber);
+        emit ValueChanged_uint(oldValue, _positiveNumber);
 
         return positiveNumber;
     }
+
     function setNegativeNumber(int _negativeNumber) public returns (int) {
+        int oldValue = negativeNumber;
         negativeNumber = _negativeNumber;
+
+        emit ValueChanged_int(oldValue, _negativeNumber);
         return negativeNumber;
     }
+
+    function updateBalance(uint _amount) public {
+        balances[msg.sender] = _amount;
+    }
+
     // 논리 변환 함수
     function toggleActive() public returns (bool) {
         if (isActive == true) {

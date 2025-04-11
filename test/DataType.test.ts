@@ -16,6 +16,38 @@ describe('DataType', function () {
     await contract.waitForDeployment();
   });
 
+  // 내가 만든 테스트 검사 코드
+  describe('정수형 값 검사 이벤트', function () {
+    // 양수에 대한 이벤트 출력
+    it('updateValue 호출 시 ValueChanged_uint 이벤트가 발생하여야 합니다.', async function () {
+      const oldValue = await contract.positiveNumber();
+      const newValue = 200;
+
+      await expect(contract.setPositiveNumber(newValue))
+        .to.emit(contract, 'ValueChanged_uint')
+        .withArgs(oldValue, newValue);
+    })
+    // 이벤트 로그 출력
+    // console.log(`ValueChanged 이벤트 발생: oldValue = ${oldValue}, newValue = ${newValue}`);
+
+    // 음수에 대해서 이벤트 출력
+    it('updateValue 호출 시 ValueChanged_int 이벤트가 발생하여야 합니다.', async function () {
+      const oldValue = await contract.negativeNumber();
+      const newValue = 200;
+
+      await expect(contract.setNegativeNumber(newValue))
+        .to.emit(contract, 'ValueChanged_int')
+        .withArgs(oldValue, newValue);
+    });
+  });
+
+  // balance 잔액 업데이트에 대한 테스트 코드 출력
+  describe('Mapping 값 검사 이벤트', function () {
+    it('updateBalance 호출 시 balance가 원하는 잔액으로 표시됩니다.', async function () {
+      expect(await contract.updateBalance(1000))
+    })
+  })
+
   describe('라이선스 및 Solidity 버전 검사', function () {
     it('컨트랙트에서 SPDX 주석으로 라이선스가 있어야 합니다.', async function () {
       const contractPath = path.join(__dirname, '../contracts/DataType.sol');
@@ -54,21 +86,6 @@ describe('DataType', function () {
     it('setNegativeNumber 호출 후 negativeNumber가 -200이어야 합니다.', async function () {
       await contract.setNegativeNumber(-200);
       expect(await contract.negativeNumber()).to.equal(-200);
-    });
-  });
-
-  // 내가 만든 테스트 검사 코드
-  describe('정수형 값 검사 이벤트', function () {
-    it('updateValue 호출 시 ValueChanged 이벤트가 발생하여야 합니다.', async function () {
-      const oldValue = await contract.positiveNumber();
-      const newValue = 200;
-
-      await expect(contract.setPositiveNumber(newValue))
-        .to.emit(contract, 'ValueChanged')
-        .withArgs(oldValue, newValue);
-
-      // 이벤트 로그 출력
-      console.log(`ValueChanged 이벤트 발생: oldValue = ${oldValue}, newValue = ${newValue}`);
     });
   });
 
